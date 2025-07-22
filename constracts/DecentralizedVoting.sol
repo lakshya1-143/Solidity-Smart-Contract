@@ -37,6 +37,7 @@ contract DecentralizedVoting {
     }
 
     function addCandidate(string memory _candidate) public onlyAdmin {
+        require(!voteExists(_candidate), "Candidate already exists.");
         candidates.push(_candidate);
         votes[_candidate] = 0;
         emit CandidateAdded(_candidate);
@@ -50,4 +51,14 @@ contract DecentralizedVoting {
         }
         return false;
     }
+
+    // New function: Get all candidates with their votes
+    function getAllVotes() public view returns (string[] memory, uint256[] memory) {
+        uint256[] memory allVotes = new uint256[](candidates.length);
+        for (uint256 i = 0; i < candidates.length; i++) {
+            allVotes[i] = votes[candidates[i]];
+        }
+        return (candidates, allVotes);
+    }
 }
+
